@@ -20,14 +20,27 @@ function app() {
     e.preventDefault();
     const value = input.value.trim();
     if (value) {
-      todoList.push(value);
+      const tod = {
+        "id": todoList.length,
+        "value": value,
+        "type": ""
+      }
+      todoList.push(tod);
       input.value = "";
-      console.log(DOM());
-      
+      console.log(todoList.length);
+
       createApp({
         initialState: "",
         actions: {
           addTodo: (state) => { },
+          SelectTodo: (id) => {
+            const todo = todoList.find(t => t.id === id);
+            console.log('fff',id);
+            
+            if (!todo) return;
+            todo.type = todo.type === "valid" ? "" : "valid"; 
+            
+          },
           removTodo: (state) => { },
         },
         view: (state) => DOM()
@@ -55,8 +68,8 @@ function DOM() {
               <ul class="todo-list">
               ${todoList.map(todo => `
                   <li class="todo-item">
-                      <input class="toggle" type="checkbox">
-                      <span class="todo-text">${todo}</span>
+                      <input class="toggle" type="checkbox" onclick="SelectTodo(${todo.id})">
+                      <span class="todo-text">${todo.value}</span>
                       <button class="destroy">&times;</button>
                   </li>
               `).join('')}
