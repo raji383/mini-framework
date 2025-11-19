@@ -74,7 +74,7 @@ h1 {
     border-top: 1px solid #e6e6e6;
 }
 
-.todo-item {
+li {
     position: relative;
     border-bottom: 1px solid #ededed;
     padding: 15px 15px 15px 60px;
@@ -83,11 +83,11 @@ h1 {
     align-items: center;
 }
 
-.todo-item:hover .destroy {
+li:hover .destroy {
     opacity: 1;
 }
 
-.todo-item.completed .todo-text {
+li .completed .todo-text {
     color: #d9d9d9;
     text-decoration: line-through;
 }
