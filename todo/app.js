@@ -1,127 +1,63 @@
 import { route, start } from "../framework/router.js";
-import { createState } from "../framework/state.js";
-const todos = createState([]);
-
-
-
-function renderApp(value, Class, class2) {
-
-    const todoList = document.querySelector(Class);
-    if (!todoList) return;
-    const li = document.createElement(class2);
-    li.appendChild(document.createTextNode(value));
-    todoList.appendChild(li);
-}
+import { setState } from "../framework/state.js";
+import { MyaddEventListener } from "../framework/events.js";
+let state = {
+    todos: []
+};
 
 const todoPage = {
     tag: "div",
     props: { class: "container" },
     children: [
-        {
-            tag: "h1",
-            children: ["todos"]
-        },
+
         {
             tag: "div",
             props: { class: "todo-app" },
             children: [
                 {
-                    tag: "div",
-                    props: { class: "input-section" },
+                    tag: "section",
+                    props: {
+                        class: "todoapp",
+                        id: "root"
+                    },
                     children: [
                         {
-                            tag: "button",
-                            props: { class: "toggle-all" },
-                            children: ["❯"]
-                        },
-                        {
-                            tag: "input",
+                            tag: "header",
                             props: {
-                                class: "new-todo",
-                                id: "new",
-                                placeholder: "What needs to be done?",
-                                autofocus: true,
-                                onkeydown: (e) => { addTodo(e); }
-                            }
-                        }
-                    ]
-                },
-
-                { tag: "ul", props: { class: "todo-list" }, children: [] },
-
-                {
-                    tag: "div",
-                    props: { class: "footer" },
-                    children: [
-                        {
-                            tag: "span",
-                            props: { class: "todo-count" },
-                            children: [
-                                { tag: "strong", children: ["0"] },
-                                " items left"
-                            ]
-                        },
-
-                        {
-                            tag: "ul",
-                            props: { class: "filters" },
+                                class: "header",
+                                "data-testid": "header"
+                            },
                             children: [
                                 {
-                                    tag: "li",
-                                    children: [
-                                        {
-                                            tag: "button",
-                                            props: {
-                                                id: "1",
-                                                onclick: (e) => {
-                                                    window.location.hash = "#/";
-                                                    document
-                                                        .querySelectorAll(".filters button")
-                                                        .forEach(btn => btn.classList.remove("selected"));
-                                                    e.target.classList.add("selected");
-
-                                                }
-                                            },
-                                            children: ["All"]
-                                        }
-                                    ]
+                                    tag: "h1",
+                                    children: ["todos"]
                                 },
-
                                 {
-                                    tag: "li",
+                                    tag: "div",
+                                    props: { class: "input-container" },
                                     children: [
                                         {
-                                            tag: "button",
+                                            tag: "input",
                                             props: {
-                                                onclick: (e) => {
-                                                    window.location.hash = "#/Active";
-                                                    document
-                                                        .querySelectorAll(".filters button")
-                                                        .forEach(btn => btn.classList.remove("selected"));
-                                                    e.target.classList.add("selected");
-
+                                                class: "new-todo",
+                                                id: "todo-input",
+                                                type: "text",
+                                                "data-testid": "text-input",
+                                                placeholder: "What needs to be done?",
+                                                value: "",
+                                                autofocus: true,
+                                                onkeydown: (e) => {
+                                                    MyaddEventListener(e, addTodo);
                                                 }
-                                            },
-                                            children: ["Active"]
-                                        }
-                                    ]
-                                },
-
-                                {
-                                    tag: "li",
-                                    children: [
+                                            }
+                                        },
                                         {
-                                            tag: "button",
+                                            tag: "label",
                                             props: {
-                                                onclick: (e) => {
-                                                    window.location.hash = "#/Completed";
-                                                    document
-                                                        .querySelectorAll(".filters button")
-                                                        .forEach(btn => btn.classList.remove("selected"));
-                                                    e.target.classList.add("selected");
-                                                }
+                                                class: "visually-hidden",
+                                                for: "todo-input"
                                             },
-                                            children: ["Completed"]
+                                            children: ["New Todo Input"]
                                         }
                                     ]
                                 }
@@ -129,23 +65,139 @@ const todoPage = {
                         },
 
                         {
-                            tag: "button",
-                            props: { class: "clear-completed" },
-                            children: ["Clear completed"]
+                            tag: "main",
+                            props: {
+                                class: "main",
+                                "data-testid": "main"
+                            },
+                            children: [
+                                {
+                                    tag: "ul",
+                                    props: {
+                                        class: "todo-list",
+                                        "data-testid": "todo-list"
+                                    },
+                                    children: []
+                                }
+                            ]
+                        },
+                        {
+                            tag: "footer",
+                            props: {
+                                class: "footer",
+                                "data-testid": "footer"
+                            },
+                            children: [
+                                {
+                                    tag: "span",
+                                    props: { class: "todo-count" },
+                                    children: ["1 item left!"]
+                                },
+                                {
+                                    tag: "ul",
+                                    props: {
+                                        class: "filters",
+                                        "data-testid": "footer-navigation"
+                                    },
+                                    children: [
+                                        {
+                                            tag: "li",
+                                            children: [
+                                                {
+                                                    tag: "a",
+                                                    props: {
+                                                        class: "selected",
+                                                        href: "#/"
+                                                    },
+                                                    children: ["All"]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            tag: "li",
+                                            children: [
+                                                {
+                                                    tag: "a",
+                                                    props: {
+                                                        class: "",
+                                                        href: "#/active"
+                                                    },
+                                                    children: ["Active"]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            tag: "li",
+                                            children: [
+                                                {
+                                                    tag: "a",
+                                                    props: {
+                                                        class: "",
+                                                        href: "#/completed"
+                                                    },
+                                                    children: ["Completed"]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    tag: "button",
+                                    props: {
+                                        class: "clear-completed",
+                                        disabled: ""
+                                    },
+                                    children: ["Clear completed"]
+                                }
+                            ]
+                        }
+
+                    ]
+                }
+
+
+            ]
+        },
+        {
+            tag: "footer",
+            props: { class: "info" },
+            children: [
+                {
+                    tag: "p",
+                    children: ["Double-click to edit a todo"]
+                },
+                {
+                    tag: "p",
+                    children: ["Created by theis Team"]
+                },
+                {
+                    tag: "p",
+                    children: [
+                        "Part of ",
+                        {
+                            tag: "a",
+                            props: { href: "https://learn.zone01oujda.ma/intra/oujda/profile?event=41" },
+                            children: ["zone01"]
                         }
                     ]
                 }
             ]
         }
+
     ]
 };
+
+
+
 function addTodo(e) {
     const value = e.target.value.trim();
-    if (e.key === "Enter" && value !== "") {
-        todos.set(renderApp(value, ".todo-list", "li"));
+    state.todos.push({ v: value, completed: false });
+    if (e.key === "Enter" && value.length >= 3) {
+        setState(state);
         e.target.value = "";
     }
 }
+
 
 
 route("/", todoPage);

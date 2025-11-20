@@ -8,9 +8,6 @@ export function route(path, component) {
 
 export function start() {
     window.addEventListener("hashchange",()=> {
-        console.log(5151);
-
-        
     });
    renderRoute();
 }
