@@ -1,4 +1,4 @@
-export function MyaddEventListener(e, fen) {
-    
-    fen(e);
+// backward-compatible tiny wrapper used by older example code
+export function MyaddEventListener(e, fn) {
+    if (typeof fn === 'function') fn(e);
 }

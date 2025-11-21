@@ -1,15 +1,9 @@
 import { render } from "./render.js";
-export function setState(newValue) {
-  state = { ...state, ...newValue };
-  render(App(), document.getElementById("root"));
+
+export function setState(App, CLaSS) {
+  const mount = document.getElementById(CLaSS);
+  if (!mount) return;
+  const tree = App();
+  render(tree, mount);
 }
-function App() {
-  return {
-    tag: "div",
-    props: {},
-    children: state.todos.map(todo => ({
-      tag: "p",
-      children: [todo]
-    }))
-  };
-}
+

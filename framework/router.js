@@ -8,13 +8,14 @@ export function route(path, component) {
 
 export function start() {
     window.addEventListener("hashchange",()=> {
+        
     });
    renderRoute();
 }
 
 function renderRoute() {
-    console.log(11);
     let path = window.location.hash.slice(1) || "/";
+    console.log(path);
     
     if (path === "/Completed") {
         route(path, `<h1>${path}</h1>`);
